@@ -34,7 +34,7 @@
     NSString *key = @"74yK4IEW4G3bbWu8DCZ2ZOxhzXZnshMBvjq79OPG";
     NSString *appID =@"K10PcfKibqynmF6Z2LMsmlZGCzrvEki1HNxj5g6f";
     
-    NSString *parseDatabaseURL = @"https://api.parse.com/1/classes/User/8D3cQDdIjy";
+    NSString *parseDatabaseURL = @"https://api.parse.com/1/classes/User";
     
     //NSLog(@"%@", parseDatabaseURL);
     
@@ -46,17 +46,34 @@
     [request addValue:key forHTTPHeaderField:@"X-Parse-REST-API-Key"];
     [request addValue:appID forHTTPHeaderField:@"X-Parse-Application-Id"];
     
+    
 
     
     AFHTTPRequestOperation *newOp = [[AFHTTPRequestOperation alloc] initWithRequest:request];
     
-   [ self.manager GET:@"classes/User" parameters:nil success:^(NSURLSessionDataTask *task, id responseObject) {
+    NSString *json = @"{\"name\":\"Al Tyus\",\"UniqueID\":\"274\"}";
+    request.HTTPBody = [json dataUsingEncoding:NSUTF8StringEncoding];
+    request.HTTPMethod = @"POST";
+    
+    
+    [newOp setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
         NSLog(@"%@", responseObject);
         
-    } failure:^(NSURLSessionDataTask *task, NSError *error) {
-        NSLog (@"%@", error);
-        
+    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        NSLog(@"%@", error);
+    
     }];
+    [newOp start];
+    
+    
+    
+//   [ self.manager GET:@"classes/User" parameters:nil success:^(NSURLSessionDataTask *task, id responseObject) {
+//        NSLog(@"%@", responseObject);
+//        
+//    } failure:^(NSURLSessionDataTask *task, NSError *error) {
+//        NSLog (@"%@", error);
+//        
+//    }];
     
     
     
