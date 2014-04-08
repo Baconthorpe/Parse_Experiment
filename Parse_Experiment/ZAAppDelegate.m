@@ -7,6 +7,9 @@
 //
 
 #import "ZAAppDelegate.h"
+#import <Parse/Parse.h>
+#import <AFNetworking.h>
+
 
 @implementation ZAAppDelegate
 
@@ -19,7 +22,24 @@
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     // Override point for customization after application launch.
     self.window.backgroundColor = [UIColor whiteColor];
-    [self.window makeKeyAndVisible];
+    
+    [Parse setApplicationId:@"K10PcfKibqynmF6Z2LMsmlZGCzrvEki1HNxj5g6f"
+                  clientKey:@"ld7vO0InmhO45fjkjgt0KcLTM5Usb0u6g47oSI7X"];
+    
+    NSString *key = @"ld7vO0InmhO45fjkjgt0KcLTM5Usb0u6g47oSI7X";
+    NSString *appID =@"K10PcfKibqynmF6Z2LMsmlZGCzrvEki1HNxj5g6f";
+    NSString *parseDatabaseURL = [NSString stringWithFormat:@"https://%@:javascript-key=%@@api.parse.com/1/classes/GameScore/Ed1nuqPvcm", appID, key];
+    
+    AFHTTPSessionManager *manager = [AFHTTPSessionManager manager];
+    
+    [manager GET:parseDatabaseURL parameters:nil success:^(NSURLSessionDataTask *task, id responseObject) {
+        NSLog(@"%@", responseObject);
+        
+    } failure:^(NSURLSessionDataTask *task, NSError *error) {
+        NSLog(@"%@",error.localizedDescription);
+    }];
+    
+  
     return YES;
 }
 
