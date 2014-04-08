@@ -10,6 +10,10 @@
 #import <Parse/Parse.h>
 #import <AFNetworking.h>
 
+@interface ZAAppDelegate ()
+@property (nonatomic) AFHTTPSessionManager *manager;
+
+@end
 
 @implementation ZAAppDelegate
 
@@ -22,24 +26,51 @@
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     // Override point for customization after application launch.
     self.window.backgroundColor = [UIColor whiteColor];
+    [self.window makeKeyAndVisible];
     
     [Parse setApplicationId:@"K10PcfKibqynmF6Z2LMsmlZGCzrvEki1HNxj5g6f"
                   clientKey:@"ld7vO0InmhO45fjkjgt0KcLTM5Usb0u6g47oSI7X"];
     
-    NSString *key = @"ld7vO0InmhO45fjkjgt0KcLTM5Usb0u6g47oSI7X";
+    NSString *key = @"74yK4IEW4G3bbWu8DCZ2ZOxhzXZnshMBvjq79OPG";
     NSString *appID =@"K10PcfKibqynmF6Z2LMsmlZGCzrvEki1HNxj5g6f";
-    NSString *parseDatabaseURL = [NSString stringWithFormat:@"https://%@:javascript-key=%@@api.parse.com/1/classes/GameScore/Ed1nuqPvcm", appID, key];
     
-    AFHTTPSessionManager *manager = [AFHTTPSessionManager manager];
+    NSString *parseDatabaseURL = @"https://api.parse.com/1/classes/User/8D3cQDdIjy";
     
-    [manager GET:parseDatabaseURL parameters:nil success:^(NSURLSessionDataTask *task, id responseObject) {
+    //NSLog(@"%@", parseDatabaseURL);
+    
+    
+    NSURL *URL = [NSURL URLWithString:parseDatabaseURL];
+    
+    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:URL];
+    [request addValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
+    [request addValue:key forHTTPHeaderField:@"X-Parse-REST-API-Key"];
+    [request addValue:appID forHTTPHeaderField:@"X-Parse-Application-Id"];
+    
+
+    
+    AFHTTPRequestOperation *newOp = [[AFHTTPRequestOperation alloc] initWithRequest:request];
+    
+   [ self.manager GET:@"classes/User" parameters:nil success:^(NSURLSessionDataTask *task, id responseObject) {
         NSLog(@"%@", responseObject);
         
     } failure:^(NSURLSessionDataTask *task, NSError *error) {
-        NSLog(@"%@",error.localizedDescription);
+        NSLog (@"%@", error);
+        
     }];
     
-  
+    
+    
+//    
+//    AFHTTPSessionManager *manager = [AFHTTPSessionManager manager];
+//    
+//    [manager GET:parseDatabaseURL parameters:nil success:^(NSURLSessionDataTask *task, id responseObject) {
+//        NSLog(@"%@", responseObject);
+//        
+//    } failure:^(NSURLSessionDataTask *task, NSError *error) {
+//        NSLog(@"%@",error.localizedDescription);
+//   }];
+    
+
     return YES;
 }
 
@@ -164,6 +195,22 @@
 - (NSURL *)applicationDocumentsDirectory
 {
     return [[[NSFileManager defaultManager] URLsForDirectory:NSDocumentDirectory inDomains:NSUserDomainMask] lastObject];
+}
+
+-(AFHTTPSessionManager *)manager
+{
+    if (!_manager)
+    {
+        _manager = [[AFHTTPSessionManager alloc] initWithBaseURL:[NSURL URLWithString:@"https://api.parse.com/1/"]];
+        _manager.requestSerializer=[AFHTTPRequestSerializer serializer];
+        
+        NSString *key = @"74yK4IEW4G3bbWu8DCZ2ZOxhzXZnshMBvjq79OPG";
+        NSString *appID =@"K10PcfKibqynmF6Z2LMsmlZGCzrvEki1HNxj5g6f";
+
+        [_manager.requestSerializer setValue:key forHTTPHeaderField:@"X-Parse-REST-API-Key"];
+        [_manager.requestSerializer setValue:appID forHTTPHeaderField:@"X-Parse-Application-Id"];
+    }
+    return _manager;
 }
 
 @end
